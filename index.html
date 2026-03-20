@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quick Test — GitHub Pages</title>
+
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0f0f11;
+      color: #e0e0e5;
+      margin: 0;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #00d4ff;
+      margin-bottom: 1.5rem;
+      font-size: 2.1rem;
+    }
+    #controls {
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    button {
+      background: #2a2a35;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    button:hover {
+      background: #3a3a45;
+      border-color: #666;
+    }
+    #output {
+      background: #1a1a22;
+      padding: 1.2rem;
+      border-radius: 8px;
+      min-height: 120px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      white-space: pre-wrap;
+      margin: 1.5rem 0;
+      border-left: 4px solid #00d4ff;
+    }
+    #canvas {
+      background: #000;
+      border: 1px solid #333;
+      border-radius: 6px;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Quick Test Area</h1>
+
+  <div id="controls">
+    <button onclick="test1()">Console Log Test</button>
+    <button onclick="test2()">DOM Update</button>
+    <button onclick="test3()">Fetch Test</button>
+    <button onclick="clearOutput()">Clear</button>
+  </div>
+
+  <div id="output">Results will appear here...</div>
+
+  <canvas id="canvas" width="600" height="240"></canvas>
+
+  <script>
+    const output = document.getElementById('output');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    function log(...args) {
+      console.log(...args);
+      output.textContent += args.join(' ') + '\n';
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function clearOutput() {
+      output.textContent = '';
+    }
+
+    // 1. Basic test
+    function test1() {
+      log('──────────────────────────────');
+      log('Test 1 : Hello from GitHub Pages!');
+      log('Date   :', new Date().toLocaleString());
+      log('User Agent :', navigator.userAgent);
+      log('Screen :', window.screen.width, '×', window.screen.height);
+    }
+
+    // 2. DOM + Canvas manipulation
+    function test2() {
+      log('Test 2 : Drawing on canvas...');
+      
+      ctx.fillStyle = '#0a0a0f';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // random colorful squares
+      for (let i = 0; i < 40; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const size = 8 + Math.random() * 24;
+        
+        ctx.fillStyle = `hsl(${Math.random()*360}, 80%, 60%)`;
+        ctx.fillRect(x - size/2, y - size/2, size, size);
+      }
+      
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 32px system-ui';
+      ctx.textAlign = 'center';
+      ctx.fillText('Quick Test', canvas.width/2, canvas.height/2 + 10);
+    }
+
+    // 3. Network request example
+    async function test3() {
+      log('Test 3 : Fetching random quote...');
+      try {
+        const res = await fetch('https://api.quotable.io/random');
+        if (!res.ok) throw new Error('Network response was not ok');
+        
+        const data = await res.json();
+        log('Quote  :', data.content);
+        log('Author :', data.author);
+      } catch (err) {
+        log('Error  :', err.message);
+      }
+    }
+
+    // Initial message
+    log('Ready! Click any button above to start testing.');
+    log('You can edit this file directly and push to see instant updates on GitHub Pages.');
+  </script>
+
+</body>
+</html>
