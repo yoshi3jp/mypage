@@ -120,17 +120,20 @@
 
     // 3. Network request example
     async function test3() {
-      log('Test 3 : Fetching random quote...');
-      try {
-        const res = await fetch('https://favqs.com/api/qotd');
-        if (!res.ok) throw new Error('Network response was not ok');
-        
-        const data = await res.json();
-        log('Quote  :', data.content);
-        log('Author :', data.author);
-      } catch (err) {
-        log('Error  :', err.message);
-      }
+      log('Test 3 : Fetching random quote via CORS proxy (corsproxy.io)...');
+        try {
+          const targetUrl = 'https://favqs.com/api/qotd';
+          const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+
+          const res = await fetch(proxyUrl);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+          const data = await res.json();
+          log('Quote  :', data.quote.body);
+          log('Author :', data.quote.author || 'Unknown');
+        } catch (err) {
+          log('Error  :', err.message);
+        }
     }
 
     // Initial message
